@@ -2,9 +2,13 @@
 import express from 'express';    // Import Express.js framework
 import bodyParser from 'body-parser';   // Middleware to parse request bodies
 import apiRouter from './routes/router.js';   // Import function to connect to the database
+import cors from 'cors'; // Import cors middleware
 
 // Create an instance of Express
 const app = express();
+
+// Cors Middleware
+app.use(cors());
 
 // Logger Middleware: Logs details of each incoming request
 app.use((req, res, next) => {
