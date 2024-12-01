@@ -14,6 +14,26 @@ apiRouter.use(function(req, res, next) {
     }
 });
 
+// POST route to post order to database
+apiRouter.post('/M00908970/order', async (req, res) => {
+    try {
+      // Get the order data from the request body
+      const order = req.body;
+      const result = await database.collection('order').insertOne(order);
+  
+      // Respond with the saved order
+      res.status(200).json({
+        message: 'Order submitted successfully!',
+        orderId: result.insertedId,
+        order: order // Return the saved order
+      });
+      console.log('Order Summary:', order);
+    } catch (error) {
+      console.error('Error submitting order:', error);
+      res.status(500).send('Error submitting order');
+    }
+});
+
 // Connect to the MongoDB database
 const database = await connectToDatabase();
 
