@@ -29,6 +29,26 @@ apiRouter.get('/M00908970/lessons', async (req, res) => {
       }
 });
 
+// Search Route
+apiRouter.get('/M00908970/search', async (req, res) => {
+    try {
+    const searchQuery = req.query.q || ''; // Get the search query
+
+     // Search for the query in multiple fields using $or
+    const results = await database.collection('lessons').find({
+        $or: [
+        { subject: { $regex: searchQuery, $options: 'i' } },
+        { location: { $regex: searchQuery, $options: 'i' } } 
+        ]
+    }).toArray(); // Convert the cursor to an array
+
+    res.status(200).json(results); // Send results as JSON
+    } catch (error) {
+    console.error('Error searching lessons:', error);
+    res.status(500).send('Internal Server Error');
+    }
+});
+
 // POST route to post order to database
 apiRouter.post('/M00908970/order', async (req, res) => {
     try {
