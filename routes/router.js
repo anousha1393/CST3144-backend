@@ -14,6 +14,21 @@ apiRouter.use(function(req, res, next) {
     }
 });
 
+// Connect to the MongoDB database
+const database = await connectToDatabase();
+
+// GET route to fetch all lessons data
+apiRouter.get('/M00908970/lessons', async (req, res) => {
+    try {
+        const lessons = await database.collection('lessons').find().toArray();
+        console.log('Lessons fetched:', lessons);  // Log the lessons data
+        res.json(lessons);
+      } catch (error) {
+        console.error('Error fetching lessons:', error);
+        res.status(500).send('Error fetching lessons');
+      }
+});
+
 // POST route to post order to database
 apiRouter.post('/M00908970/order', async (req, res) => {
     try {
@@ -34,19 +49,29 @@ apiRouter.post('/M00908970/order', async (req, res) => {
     }
 });
 
-// Connect to the MongoDB database
-const database = await connectToDatabase();
+// PUT route to update lesson data
+apiRouter.put('/M00908970/lessons/:id', async (req, res) => {
+    const { id } = req.params; // Extract lesson ID from the URL parameter
+    const { spaces } = req.body; // Extract spaces value from the request body
 
-// GET route to fetch all lessons data
-apiRouter.get('/M00908970/lessons', async (req, res) => {
     try {
-        const lessons = await database.collection('lessons').find().toArray();
-        console.log('Lessons fetched:', lessons);  // Log the lessons data
-        res.json(lessons);
-      } catch (error) {
-        console.error('Error fetching lessons:', error);
-        res.status(500).send('Error fetching lessons');
-      }
+    // Update the lesson's available spaces in the database
+    const result = await database.collection('lessons').updateOne(
+        { _id: new ObjectId(id) }, // Find the lesson by ID
+        { $set: { spaces: spaces } } // Set the new spaces value
+    );
+
+    console.log('lessons updated:', result);
+
+    if (result.matchedCount === 0) {
+        return res.status(404).json({ message: 'Lesson not found' });
+    }
+
+    res.status(200).json({ message: 'Lesson updated successfully' });
+    } catch (error) {
+    console.error('Error updating lesson:', error);
+    res.status(500).json({ message: 'Error updating lesson' });
+    }
 });
 
 // Export api function for use in other modules
