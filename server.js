@@ -16,8 +16,8 @@ app.use((req, res, next) => {
 // Configure bodyPaser to parse incoming JSON data
 app.use(bodyParser.json());
 
-// Serve files from the 'public' directory
-app.use(express.static('public'));
+// Serve files from the 'images' directory
+app.use(express.static('images'));
 
 // use your router, any URL that starts with '/api' will be sent to 'apiRouter'
 app.use(apiRouter);
