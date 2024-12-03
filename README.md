@@ -23,7 +23,7 @@ Responsive Design: Optimized for use on desktops.
 # Installation
 Follow these steps to set up the project locally:
 -> Clone the repository  
-git clone https://github.com/anousha1393/CST3144-backend/
+git clone https://github.com/anousha1393/CST3144-backend
 
 -> Navigate to the project directory  
 cd your-repository  
